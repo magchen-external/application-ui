@@ -341,8 +341,7 @@ export const validateSubscriptionTable = (
   numberOfRemoteClusters,
   data
 ) => {
-  // TODO: enable checkClusterColumn when cluster count issue is resolved
-  let checkClusterColumn = false;
+  let checkClusterColumn = true;
   let checkTimeWindowColumn = false;
   let checkResourceColumn = false;
   let singularDisplayName;
