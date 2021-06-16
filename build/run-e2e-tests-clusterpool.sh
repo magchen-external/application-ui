@@ -47,11 +47,11 @@ fold_start cp-lock "ClusterPool Lock"
 
 LOCK_ID="travis-${TRAVIS_JOB_ID}"
 oc login --token $CLUSTERPOOL_TOKEN $CLUSTERPOOL_CLUSTER --insecure-skip-tls-verify
-ck lock -i $LOCK_ID $CLUSTERPOOL_HUB
-ck lock -i $LOCK_ID $CLUSTERPOOL_MANAGED
-ck run -f $CLUSTERPOOL_HUB     # Resume hub if needed
-ck use -f $CLUSTERPOOL_MANAGED # Resume and wait for managed to be ready
-ck use -f $CLUSTERPOOL_HUB     # Wait for hub to be ready
+ck lock -i $LOCK_ID $CLUSTERPOOL_HUB_TEST
+ck lock -i $LOCK_ID $CLUSTERPOOL_MANAGED_TEST
+ck run -f $CLUSTERPOOL_HUB_TEST     # Resume hub if needed
+ck use -f $CLUSTERPOOL_MANAGED_TEST # Resume and wait for managed to be ready
+ck use -f $CLUSTERPOOL_HUB_TEST     # Wait for hub to be ready
 
 fold_end cp-lock
 
@@ -60,7 +60,7 @@ fold_end cp-lock
 ###############################################################################
 fold_start test-setup "Test Setup"
 
-HUB_CREDS=$(ck creds -c $CLUSTERPOOL_HUB)
+HUB_CREDS=$(ck creds -c $CLUSTERPOOL_HUB_TEST)
 export OC_CLUSTER_URL=$(echo $HUB_CREDS | jq -r '.api_url')
 export OC_CLUSTER_USER=$(echo $HUB_CREDS | jq -r '.username')
 export OC_CLUSTER_PASS=$(echo $HUB_CREDS | jq -r '.password')
@@ -71,7 +71,7 @@ OAUTH_POD=$(oc -n openshift-authentication get pods -o jsonpath='{.items[0].meta
 export OC_CLUSTER_INGRESS_CA=/certificates/ingress-ca.crt
 oc rsh -n openshift-authentication $OAUTH_POD cat /run/secrets/kubernetes.io/serviceaccount/ca.crt > ${HOME}${OC_CLUSTER_INGRESS_CA}
 
-MANAGED_CREDS=$(ck creds -f $CLUSTERPOOL_MANAGED)
+MANAGED_CREDS=$(ck creds -f $CLUSTERPOOL_MANAGED_TEST)
 export CYPRESS_MANAGED_OCP_URL=$(echo $MANAGED_CREDS | jq -r '.api_url')
 export CYPRESS_MANAGED_OCP_USER=$(echo $MANAGED_CREDS | jq -r '.username')
 export CYPRESS_MANAGED_OCP_PASS=$(echo $MANAGED_CREDS | jq -r '.password')
@@ -124,8 +124,8 @@ fold_end cypress
 # ClusterPool Unlock
 ###############################################################################
 fold_start cp-unlock "ClusterPool Unlock"
-ck unlock -i $LOCK_ID $CLUSTERPOOL_HUB
-ck unlock -i $LOCK_ID $CLUSTERPOOL_MANAGED
+ck unlock -i $LOCK_ID $CLUSTERPOOL_HUB_TEST
+ck unlock -i $LOCK_ID $CLUSTERPOOL_MANAGED_TEST
 
 SLEEP_ON_DAY=6 # Saturday and Sunday
 SLEEP_BEFORE=7 # 7 am
@@ -141,8 +141,8 @@ then
   echo Attempting to hibernate clusters
   # Attempt to hibernate; do not force and ignore error in case still locked by others
   set +e
-  ck hibernate $CLUSTERPOOL_MANAGED
-  ck hibernate $CLUSTERPOOL_HUB
+  ck hibernate $CLUSTERPOOL_MANAGED_TEST
+  ck hibernate $CLUSTERPOOL_HUB_TEST
   set -e
 fi
 
