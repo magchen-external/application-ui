@@ -8,7 +8,7 @@ import {
 } from "../../views/resources";
 
 describe("Application UI: [P1][Sev1][app-lifecycle-ui] Cleanup resouces Test", () => {
-  if (Cypress.config().baseUrl.includes("localhost")) {
+  if (!Cypress.env("IS_CANARY")) {
     const kubeconfigs = Cypress.env("KUBE_CONFIG");
     for (const type in config) {
       const apps = config[type].data;
@@ -36,6 +36,6 @@ describe("Application UI: [P1][Sev1][app-lifecycle-ui] Cleanup resouces Test", (
       });
     }
   } else {
-    it("Skipping cleanup resources test if not running on localhost", () => {});
+    it("Skipping cleanup resources test if running canary", () => {});
   }
 });

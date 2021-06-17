@@ -120,5 +120,11 @@ module.exports = (on, config) => {
   config.env.USER_CONFIG = getUsers;
   config.env.RBAC_CONFIG = JSON.parse(rbacConfig);
 
+  config.env.IS_CANARY = !(
+    config.baseUrl.includes("localhost") || config.env.PROW
+  )
+    ? "true"
+    : "";
+
   return config;
 };

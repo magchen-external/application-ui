@@ -5,7 +5,7 @@ const config = Cypress.env("TEST_CONFIG_EXCLUDE_ARGO");
 import { apiResources } from "../../views/resources";
 
 describe("Application UI: [P1][Sev1][app-lifecycle-ui] Application backend validation that app hub resources have been removed", () => {
-  if (Cypress.config().baseUrl.includes("localhost")) {
+  if (!Cypress.env("IS_CANARY")) {
     for (const type in config) {
       const apps = config[type].data;
       apps.forEach(data => {
@@ -25,6 +25,6 @@ describe("Application UI: [P1][Sev1][app-lifecycle-ui] Application backend valid
       });
     }
   } else {
-    it("Skipping validate delete test if not running on localhost", () => {});
+    it("Skipping validate delete test if running canary", () => {});
   }
 });

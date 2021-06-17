@@ -10,7 +10,7 @@ import {
 } from "../../views/resources";
 
 describe("Application UI: [P1][Sev1][app-lifecycle-ui] Delete application Test", () => {
-  if (Cypress.config().baseUrl.includes("localhost")) {
+  if (!Cypress.env("IS_CANARY")) {
     for (const type in config) {
       const apps = config[type].data;
       apps.forEach(data => {
@@ -51,6 +51,6 @@ describe("Application UI: [P1][Sev1][app-lifecycle-ui] Delete application Test",
       });
     }
   } else {
-    it("Skipping delete resources test if not running on localhost", () => {});
+    it("Skipping delete resources test if running canary", () => {});
   }
 });

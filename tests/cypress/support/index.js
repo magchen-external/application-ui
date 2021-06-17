@@ -47,9 +47,6 @@ before(() => {
 
   // create ansible tower secret
   cy.createSecret();
-  if (Cypress.config().baseUrl.includes("localhost")) {
-    cy.installArgoCDOperator();
-  }
 
   // This is needed for search to deploy RedisGraph upstream. Without this search won't be operational.
   cy

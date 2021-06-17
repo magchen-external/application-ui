@@ -1,9 +1,9 @@
 // Copyright (c) 2020 Red Hat, Inc.
 // Copyright Contributors to the Open Cluster Management project
 
-const config = Cypress.config().baseUrl.includes("localhost")
-  ? Cypress.env("TEST_CONFIG")
-  : Cypress.env("TEST_CONFIG_EXCLUDE_ARGO");
+const config = Cypress.env("IS_CANARY")
+  ? Cypress.env("TEST_CONFIG_EXCLUDE_ARGO")
+  : Cypress.env("TEST_CONFIG");
 import { validateResourceTable } from "../../views/application";
 import { getNumberOfManagedClusters } from "../../views/resources";
 
