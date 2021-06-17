@@ -7,9 +7,9 @@ import {
   getNumberOfManagedClusters
 } from "../../views/resources";
 
-const config = Cypress.config().baseUrl.includes("localhost")
-  ? Cypress.env("TEST_CONFIG")
-  : Cypress.env("TEST_CONFIG_EXCLUDE_ARGO");
+const config = Cypress.env("IS_CANARY")
+  ? Cypress.env("TEST_CONFIG_EXCLUDE_ARGO")
+  : Cypress.env("TEST_CONFIG");
 
 describe("Application UI: [P1][Sev1][app-lifecycle-ui] Application Validation Test for single application page, topology ", () => {
   it(`get the name of the managed OCP cluster`, () => {
